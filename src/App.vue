@@ -1,30 +1,41 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="container">
+
+    <div>
+      <my-button @click="carSpawn">Spawn car</my-button>
+      <my-button @click="removeCar">Remove car</my-button>
+    </div>
+    <div>
+      <canvas-window></canvas-window>
+    </div>
   </div>
-  <router-view/>
 </template>
 
+<script>
+
+export default {
+    name: 'App',
+    
+    setup() {
+      return {
+        carSpawn: () => {
+          console.log('car spawned')
+        }
+      }
+    }
+    
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.container {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  position: absolute;
+
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
