@@ -29,21 +29,18 @@ export default {
         const el = ref(null);
         const {position, style} = useMakeDragable(el);
         const {} = useImageLoader(el);
-        const carVisible =  ref(props.carVisible);
+        const carVisible =  ref();
 
         const renderCar = async () => {
             
-            if (carVisible.value) {
-                const ctx = el.value.getContext("2d"); 
-                const car = new Image();
-                car.src = CarTopView;
+           const ctx = el.value.getContext("2d"); 
+            const car = new Image();
+            car.src = CarTopView;
 
-                car.onload = function() {
-                    ctx.drawImage(car, 10, 20, 50, 50);
-                    console.log('car spawned')
-                };
-            }
-            console.log(carVisible.value) 
+            car.onload = function() {
+                ctx.drawImage(car, 10, 20, 50, 50);
+                console.log('car spawned')
+            };
         }
 
         const renderBackground = () => {
@@ -61,9 +58,19 @@ export default {
         watch(el, async () => {
             if(el.value){
                 await renderBackground();
-                renderCar();
             }
         })
+        watch(
+            () => props.carVisible,
+            (carVisible, prevCarVisible) => {
+                console.log("watcher: ", carVisible, prevCarVisible)
+                if(props.carVisible) {
+                    renderCar()
+                }else {
+                    renderBackground()
+                }
+            }
+        )
 
         return {
             el,

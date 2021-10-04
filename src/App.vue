@@ -21,11 +21,9 @@ export default {
 
     const spawnCar = async () => {
       carVisible.value = true
-      console.log(carVisible.value)
     }
     const removeCar = async () => {
       carVisible.value = false
-      console.log(carVisible.value)
     }
 
     return {
