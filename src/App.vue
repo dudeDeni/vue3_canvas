@@ -1,28 +1,40 @@
 <template>
   <div class="container">
-
     <div>
-      <my-button @click="carSpawn">Spawn car</my-button>
+      <my-button @click="spawnCar">Spawn car</my-button>
       <my-button @click="removeCar">Remove car</my-button>
     </div>
     <div>
-      <canvas-window></canvas-window>
+      <canvas-window :carVisible="carVisible"></canvas-window>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted, watch, watchEffect } from "vue";
 
 export default {
     name: 'App',
-    
-    setup() {
-      return {
-        carSpawn: () => {
-          console.log('car spawned')
-        }
-      }
+
+  setup() {
+    const carVisible = ref(false);
+
+    const spawnCar = async () => {
+      carVisible.value = true
+      console.log(carVisible.value)
     }
+    const removeCar = async () => {
+      carVisible.value = false
+      console.log(carVisible.value)
+    }
+
+    return {
+      carVisible,
+      spawnCar,
+      removeCar
+    }
+
+  }
     
 }
 </script>

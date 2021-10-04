@@ -6,11 +6,11 @@
     >
     </canvas> 
     <pre>{{ position }}</pre>
-    <car-component></car-component>
+    
 </template>
 
 <script>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, watchEffect, computed } from "vue";
 import useMakeDragable from "@/hooks/useMakeDragable";
 import useImageLoader from "@/hooks/useImageLoader";
 import Roads from "@/assets/roads.jpg";
@@ -19,26 +19,31 @@ import CarTopView from "@/assets/blue_car.png";
 
 export default {
     name: 'CanvasWindow',
-    data() {
-        return {
-            
+    props: {
+        carVisible:{
+            type: Boolean,
+            required: true
         }
     },
-    setup() {
+    setup(props) {
         const el = ref(null);
         const {position, style} = useMakeDragable(el);
         const {} = useImageLoader(el);
-        
+        const carVisible =  ref(props.carVisible);
 
-        const renderCar = () => {
+        const renderCar = async () => {
             
-            const ctx = el.value.getContext("2d"); 
-            const car = new Image();
-            car.src = CarTopView;
-            car.onload = function() {
-                ctx.drawImage(car, 0, -10, 300, 200);
-            };
-             
+            if (carVisible.value) {
+                const ctx = el.value.getContext("2d"); 
+                const car = new Image();
+                car.src = CarTopView;
+
+                car.onload = function() {
+                    ctx.drawImage(car, 10, 20, 50, 50);
+                    console.log('car spawned')
+                };
+            }
+            console.log(carVisible.value) 
         }
 
         const renderBackground = () => {
@@ -55,19 +60,17 @@ export default {
 
         watch(el, async () => {
             if(el.value){
-                renderBackground();
+                await renderBackground();
                 renderCar();
-                console.log(el.value)
-
             }
         })
-
 
         return {
             el,
             position,
             style,
-            
+            renderCar,
+            carVisible
         };
     },
     
