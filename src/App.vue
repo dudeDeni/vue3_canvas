@@ -19,10 +19,10 @@ export default {
   setup() {
     const carVisible = ref(false);
 
-    const spawnCar = async () => {
+    const spawnCar = () => {
       carVisible.value = true
     }
-    const removeCar = async () => {
+    const removeCar = () => {
       carVisible.value = false
     }
 

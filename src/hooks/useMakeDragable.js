@@ -1,37 +1,52 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import CarTopView from "@/assets/blue_car.png";
 
-export default function useMakeDragable(element) {
+export default function useMakeDragable(el) {
+    
+    watch(el.value, async (el, prevElement) => {
+        if(el.value){
+            renderImg();
+            position.drawCar();
+
+        }
+    })
     
     const position = reactive({
         init: false,
         x: 0,
         y: 0,
+        moveX: 5,
+        moveY: 2,
         width: 0,
         height: 0,
         isDragging: false,
         dragStartX: null,
-        dragStartY: null
-    });
+        dragStartY: null,
 
-    const style = computed(() => {
-        if (position.init) {
-            return {
-                position: "absolute",
-                left: position.x + "px",
-                top: position.y + "px",
-                width: position.width + "px",
-                height: position.height + "px",
-                "box-shadow": position.isDragging
-                ? "3px 6px 16px rgba(0, 0, 0, 0.15)"
-                : "",
-                transform: position.isDragging ? "translate(-3px, -6px)" : "",
-                cursor: position.isDragging ? "grab" : "pointer"
+        drawCar: (el) => {
+            const ctx = el.value.getContext("2d");
+            ctx.imageSmoothingEnabled = false;
+            const car = new Image();
+            car.src = CarTopView;
+            ctx.beginPath();
+            car.onload = function() {
+                ctx.drawImage(car, this.x, this.y, 20, 40);
+                console.log('Blue car spawned')
             };
-        }
-        return {};
+            ctx.closePath();
+        },
     });
 
+    const renderImg = (el) => {
+        const canvas = el.value;
+        const ctx = el.value.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        position.drawCar();
+        position.x += position.moveX;
+        position.y += position.moveY;
+        window.requestAnimationFrame(renderImg);
+    }
+    
     const onMouseDown = e => {
         let {clientX, clientY } = e;
         position.dragStartX = clientX - position.x;
@@ -41,6 +56,8 @@ export default function useMakeDragable(element) {
 
         document.addEventListener("mouseup", onMouseUp);
         document.addEventListener("mousemove", onMouseMove);
+        const raf = window.requestAnimationFrame(renderImg);
+        return raf
     };
     const onMouseMove = e => {
         let { clientX, clientY } = e;
@@ -54,16 +71,16 @@ export default function useMakeDragable(element) {
 
         document.removeEventListener("mouseup", onMouseUp);
         document.removeEventListener("mousemove", onMouseMove);
+        window.cancelAnimationFrame;
     };
 
-
-    watch(element, (element, prevElement, onCleanup) => {
+    watch(el, (el, prevElement, onCleanup) => {
         let rect;
 
-        if (element instanceof HTMLElement) {
-            rect = element.getBoundingClientRect(element);
-        } else if (element instanceof SVGGraphicsElement) {
-            rect = element.getBBox(element);
+        if (el instanceof HTMLElement) {
+            rect = el.getBoundingClientRect(el);
+        } else if (el instanceof SVGGraphicsElement) {
+            rect = el.getBBox(el);
         }
         if (rect === undefined) return {
         position: {}
@@ -75,13 +92,13 @@ export default function useMakeDragable(element) {
         position.width = Math.round(rect.width);
         position.height = Math.round(rect.height);
 
-        element.addEventListener("mousedown", onMouseDown);
+        el.addEventListener("mousedown", onMouseDown);
 
         onCleanup(() => {
             document.removeEventListener("mouseup", onMouseUp);
             document.removeEventListener("mousemove", onMouseMove);
-            if (element instanceof HTMLElement) {
-                element.removeEventListener("mousedown", onMouseDown);
+            if (el instanceof HTMLElement) {
+                el.removeEventListener("mousedown", onMouseDown);
             }
         })
     });
@@ -89,6 +106,6 @@ export default function useMakeDragable(element) {
     
 
     return {
-        position, style
+        position,
     }
 }

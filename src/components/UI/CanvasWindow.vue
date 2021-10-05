@@ -1,7 +1,6 @@
 <template>
     <canvas
         ref="el"
-        :style="style"
         class="canvas"
     >
     </canvas> 
@@ -14,7 +13,7 @@ import { ref, onMounted, watch, watchEffect, computed } from "vue";
 import useMakeDragable from "@/hooks/useMakeDragable";
 import useImageLoader from "@/hooks/useImageLoader";
 import Roads from "@/assets/roads.jpg";
-import CarTopView from "@/assets/blue_car.png";
+import CarTopView from "@/assets/CarTopView.svg";
 
 
 export default {
@@ -27,24 +26,26 @@ export default {
     },
     setup(props) {
         const el = ref(null);
-        const {position, style} = useMakeDragable(el);
+        const {position} = useMakeDragable(el);
         const {} = useImageLoader(el);
         const carVisible =  ref();
 
         const renderCar = async () => {
-            
-           const ctx = el.value.getContext("2d"); 
+            const canvas = el.value;
+            const ctx = canvas.getContext("2d");
+            ctx.imageSmoothingEnabled = false;
             const car = new Image();
             car.src = CarTopView;
 
             car.onload = function() {
-                ctx.drawImage(car, 10, 20, 50, 50);
+                ctx.drawImage(car, 10, 20, 20, 40);
                 console.log('car spawned')
             };
         }
 
         const renderBackground = () => {
-            const ctx = el.value.getContext("2d");  
+            const ctx = el.value.getContext("2d");
+            ctx.imageSmoothingEnabled = false;  
             const bg = new Image();
             bg.src = Roads;
             return new Promise((resolve , reject) =>{
@@ -75,7 +76,6 @@ export default {
         return {
             el,
             position,
-            style,
             renderCar,
             carVisible
         };
