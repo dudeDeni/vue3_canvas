@@ -10,7 +10,7 @@
 
 <script>
 import { ref, reactive, onMounted, watch, watchEffect, computed } from "vue";
-import Roads from "@/assets/roads.jpg";
+import Roads from "@/assets/Intersection.svg";
 import CarTopView from "@/assets/CarTopView.svg";
 import BlueCar from "@/assets/blue_car.png";
 
@@ -48,7 +48,7 @@ export default {
             bg.src = Roads;
             return new Promise((resolve , reject) =>{
                 bg.onload = function() {
-                    ctx.drawImage(bg, 0, -10, 300, 200);
+                    ctx.drawImage(bg, 0, -45, 300, 250);
                     resolve()
                 };
             }) 
@@ -69,10 +69,10 @@ export default {
             const ctx = el.value.getContext("2d");
             ctx.imageSmoothingEnabled = false;
             const car = new Image();
-            car.src = BlueCar;
+            car.src = CarTopView;
             ctx.beginPath();
             car.onload = function() {
-                ctx.drawImage(car, position.x, position.y, 60, 50);
+                ctx.drawImage(car, position.x, position.y, 28, 50);
             };
             ctx.closePath();
         };
@@ -85,25 +85,27 @@ export default {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.restore();
             drawCar();
-            
         };
         
         const onMouseDown = e => {
             e.stopPropagation();
-            let {clientX, clientY } = e;
-            position.dragStartX = clientX - position.x;
-            position.dragStartY = clientY - position.y;
+            let {layerX, layerY } = e;
+            position.dragStartX = layerX/5 - position.x;
+            position.dragStartY = layerY/5 - position.y;
 
             position.isDragging = true;
+            console.log("e.layerX", layerX)
+            console.log("clientX", e.clientX)
+            console.log("position", position.x, position.y)
 
             document.addEventListener("mouseup", onMouseUp);
             document.addEventListener("mousemove", onMouseMove);
             
         };
         const onMouseMove = e => {
-            let { clientX, clientY } = e;
-            position.x = clientX - position.dragStartX;
-            position.y = clientY - position.dragStartY;
+            let { layerX, layerY } = e;
+            position.x = layerX/5 - position.dragStartX;
+            position.y = layerY/5 - position.dragStartY;
             raf = window.requestAnimationFrame(renderImg);
         };
         const onMouseUp = e => {
