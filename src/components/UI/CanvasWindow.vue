@@ -3,9 +3,7 @@
         ref="el"
         class="canvas"
     >
-    </canvas> 
-    <pre>{{ position }}</pre>
-    
+    </canvas>
 </template>
 
 <script>
@@ -88,7 +86,6 @@ export default {
         };
         
         const onMouseDown = e => {
-            e.stopPropagation();
             let {layerX, layerY } = e;
             position.dragStartX = layerX/5 - position.x;
             position.dragStartY = layerY/5 - position.y;
@@ -96,6 +93,7 @@ export default {
             position.isDragging = true;
             console.log("e.layerX", layerX)
             console.log("clientX", e.clientX)
+            console.log("pageX", e.pageX)
             console.log("position", position.x, position.y)
 
             document.addEventListener("mouseup", onMouseUp);
@@ -106,7 +104,7 @@ export default {
             let { layerX, layerY } = e;
             position.x = layerX/5 - position.dragStartX;
             position.y = layerY/5 - position.dragStartY;
-            raf = window.requestAnimationFrame(renderImg);
+            
         };
         const onMouseUp = e => {
             position.isDragging = false;
@@ -115,7 +113,6 @@ export default {
 
             document.removeEventListener("mouseup", onMouseUp);
             document.removeEventListener("mousemove", onMouseMove);
-            window.cancelAnimationFrame(raf);
         };
 
         onMounted(() => {
@@ -136,7 +133,7 @@ export default {
 
         watch(position, (position, prevPos) => {
             if(position){
-                
+                renderImg()
             }
         })
 
@@ -175,7 +172,6 @@ export default {
 .canvas {
   width: 1400px;
   height: 750px;
-  margin-top: 100px;
   border: 3px solid black;
 }
 

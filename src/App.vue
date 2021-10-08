@@ -1,11 +1,13 @@
 <template>
-  <div class="container">
-    <div>
-      <my-button @click="spawnCar">Spawn car</my-button>
-      <my-button @click="removeCar">Remove car</my-button>
-    </div>
-    <div>
-      <canvas-window :carVisible="carVisible"></canvas-window>
+  <div>
+    <div class="grid grid-rows-1 items-center justify-center">
+      <div class="grid grid-cols-2 gap-x-28 my-10">
+        <my-button @click="spawnCar" class="text-white">SPAWN CAR</my-button>
+        <my-button @click="removeCar" class="text-white">REMOVE CAR</my-button>
+      </div>
+      <div class="">
+        <canvas-window :carVisible="carVisible"></canvas-window>
+      </div>
     </div>
   </div>
 </template>
@@ -38,14 +40,5 @@ export default {
 </script>
 
 <style>
-.container {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  position: absolute;
-
-}
 
 </style>

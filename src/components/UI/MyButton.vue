@@ -1,5 +1,5 @@
 <template>
-    <button class="btn">
+    <button class=" relative group bg-green-500 focus:bg-green-700 rounded-lg border-4 border-green-900 shadow-lg py-2 font-mono text-4xl">
         <slot></slot>
     </button>
 </template>
@@ -11,14 +11,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
-.btn {
-    align-self: flex-end;
-    padding: 10px 15px;
-    background: white;
-    color: teal;
-    border: 1px solid teal;
-    border-radius: 4px;
-}
+
 </style>
