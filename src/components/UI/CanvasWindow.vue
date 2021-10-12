@@ -96,8 +96,8 @@ export default {
             console.log("pageX", e.pageX)
             console.log("position", position.x, position.y)
 
-            document.addEventListener("mouseup", onMouseUp);
-            document.addEventListener("mousemove", onMouseMove);
+            el.value.addEventListener("mouseup", onMouseUp);
+            el.value.addEventListener("mousemove", onMouseMove);
             
         };
         const onMouseMove = e => {
@@ -111,8 +111,8 @@ export default {
             position.dragStartX = null;
             position.dragStartY = null;
 
-            document.removeEventListener("mouseup", onMouseUp);
-            document.removeEventListener("mousemove", onMouseMove);
+            el.value.removeEventListener("mouseup", onMouseUp);
+            el.value.removeEventListener("mousemove", onMouseMove);
         };
 
         onMounted(() => {
@@ -120,20 +120,21 @@ export default {
         })
 
         watch(el, (el, prevElement, onCleanup) => {
-            document.addEventListener("mousedown", onMouseDown);
+            el.addEventListener("mousedown", onMouseDown);
 
             onCleanup(() => {
-                document.removeEventListener("mouseup", onMouseUp);
-                document.removeEventListener("mousemove", onMouseMove);
+                el.removeEventListener("mouseup", onMouseUp);
+                el.removeEventListener("mousemove", onMouseMove);
                 if (el instanceof HTMLElement) {
-                    document.removeEventListener("mousedown", onMouseDown);
+                    el.removeEventListener("mousedown", onMouseDown);
                 }
             })
         });
 
-        watch(position, (position, prevPos) => {
-            if(position){
+        watch([position, props.carVisible], (position, carVisible, prevPos, prevCarVisible) => {
+            if(props.carVisible){
                 renderImg()
+                console.log(props.carVisible)
             }
         })
 

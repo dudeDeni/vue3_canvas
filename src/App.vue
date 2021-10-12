@@ -5,7 +5,7 @@
         <my-button @click="spawnCar" class="text-white">SPAWN CAR</my-button>
         <my-button @click="removeCar" class="text-white">REMOVE CAR</my-button>
       </div>
-      <div class="">
+      <div>
         <canvas-window :carVisible="carVisible"></canvas-window>
       </div>
     </div>
